@@ -17,13 +17,13 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
-	"strings"
+	// "strconv"
+	// "strings"
 	"time"
 
 	storage "cloud.google.com/go/storage"
 	cache "github.com/patrickmn/go-cache"
-	"github.com/rs/zerolog/log"
+	// "github.com/rs/zerolog/log"
 )
 
 // objectMetadataCache stores object metadata to speed up serving of data.
@@ -64,28 +64,28 @@ func setHeaders(ctx context.Context, objectHandle *storage.ObjectHandle,
 func getAttrs(ctx context.Context, objectHandle *storage.ObjectHandle) (
 	objectAttrs *storage.ObjectAttrs, err error) {
 	// get object metadata. Use a cache to speed up TTFB.
-	maybeAttrs, hit := objectMetadataCache.Get(objectHandle.ObjectName())
-	if hit {
-		objectAttrs = maybeAttrs.(*storage.ObjectAttrs)
-	} else {
-		// TODO(domz): no need for full projection here
-		objectAttrs, err = objectHandle.Attrs(ctx)
-		if err != nil {
-			return
-		}
-		// cache the result, honoring Cache-Control: max-age
-		expiry := cache.DefaultExpiration
-		cacheControl := objectAttrs.CacheControl
-		if cacheControl != "" &&
-			strings.HasPrefix(cacheControl, "max-age") {
-			ccSecs, err := strconv.Atoi(strings.Split(cacheControl, "=")[1])
-			if err != nil {
-				log.Fatal().Msgf("getAttrs: %v", err)
-			} else {
-				expiry = time.Second * time.Duration(ccSecs)
-			}
-		}
-		objectMetadataCache.Set(objectHandle.ObjectName(), objectAttrs, expiry)
-	}
+	// maybeAttrs, hit := objectMetadataCache.Get(objectHandle.ObjectName())
+	// if hit {
+	// 	objectAttrs = maybeAttrs.(*storage.ObjectAttrs)
+	// } else {
+	// TODO(domz): no need for full projection here
+	objectAttrs, err = objectHandle.Attrs(ctx)
+	// if err != nil {
+	// 	return
+	// }
+	// cache the result, honoring Cache-Control: max-age
+	// expiry := cache.DefaultExpiration
+	// cacheControl := objectAttrs.CacheControl
+	// if cacheControl != "" &&
+	// 	strings.HasPrefix(cacheControl, "max-age") {
+	// 	ccSecs, err := strconv.Atoi(strings.Split(cacheControl, "=")[1])
+	// 	if err != nil {
+	// 		log.Fatal().Msgf("getAttrs: %v", err)
+	// 	} else {
+	// 		expiry = time.Second * time.Duration(ccSecs)
+	// 	}
+	// }
+	// objectMetadataCache.Set(objectHandle.ObjectName(), objectAttrs, expiry)
+	// }
 	return
 }
