@@ -71,8 +71,8 @@ func ProxyHTTPGCS(output http.ResponseWriter, input *http.Request) {
 	if CheckAuth(input) == false {
 		// 認証失敗時
 		output.Header().Add("WWW-Authenticate", `Basic realm="SECRET AREA"`)
-		output.WriteHeader(http.StatusUnauthorized) // 401
-		http.Error(output, "Unauthorized", 401)
+		output.WriteHeader(http.StatusUnauthorized)                 // 401
+		http.Error(output, "Unauthorized", http.StatusUnauthorized) // 401
 		return
 	}
 
