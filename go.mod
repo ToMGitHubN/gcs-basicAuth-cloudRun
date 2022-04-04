@@ -1,4 +1,3 @@
-
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,11 +15,18 @@ module github.com/ToMGitHubN/gcs-basicAuth-cloudRun
 go 1.16
 
 require (
-	cloud.google.com/go v0.81.0
-	cloud.google.com/go/storage v1.14.0
+	cloud.google.com/go v0.100.2
+	cloud.google.com/go/iam v0.3.0 // indirect
+	cloud.google.com/go/storage v1.21.0
+	github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e // indirect
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/jstemmer/go-junit-report v1.0.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/rs/zerolog v1.21.0
-	golang.org/x/net v0.0.0-20210316092652-d523dce5a7f4
-	golang.org/x/text v0.3.6
-	google.golang.org/genproto v0.0.0-20210506142907-4a47615972c2
+	github.com/rs/zerolog v1.26.1
+	golang.org/x/net v0.0.0-20220325170049-de3da57026de
+	golang.org/x/sys v0.0.0-20220330033206-e17cdc41300f // indirect
+	golang.org/x/text v0.3.7
+	golang.org/x/tools v0.1.10 // indirect
+	google.golang.org/api v0.74.0 // indirect
+	google.golang.org/genproto v0.0.0-20220329172620-7be39ac1afc7
 )
