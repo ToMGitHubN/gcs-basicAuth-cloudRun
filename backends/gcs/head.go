@@ -52,7 +52,8 @@ func ReadMetadata(ctx context.Context, response http.ResponseWriter,
 	media := strings.NewReader("")
 	if len(pipeline) > 0 {
 		// use a filter pipeline
-		_, err = filter.PipelineCopy(ctx, response, media, request, pipeline)
+		// _, err = filter.PipelineCopy(ctx, response, media, request, pipeline)
+		err = filter.PipelineCopy(ctx, response, media, request, pipeline)
 	} else {
 		// unfiltered, simple copy
 		_, err = io.Copy(response, media)

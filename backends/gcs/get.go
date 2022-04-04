@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/ToMGitHubN/gcs-basicAuth-cloudRun/common"
 	"github.com/ToMGitHubN/gcs-basicAuth-cloudRun/filter"
@@ -96,10 +97,15 @@ func ReadWithCache(ctx context.Context, response http.ResponseWriter,
 	// serve the media
 	if len(pipeline) > 0 {
 		// use a filter pipeline
-		_, err = filter.PipelineCopy(ctx, response, media, request, pipeline)
+		// _, err = filter.PipelineCopy(ctx, response, media, request, pipeline)
+		err = filter.PipelineCopy(ctx, response, media, request, pipeline)
 	} else {
 		// unfiltered, simple copy
-		_, err = io.Copy(response, media)
+		// _, err = io.Copy(response, media)
+
+		var output_byte []byte
+		output_byte, err = io.ReadAll(media)
+		http.ServeContent(response, request, objectName, time.Now(), bytes.NewReader(output_byte))
 	}
 	if err != nil {
 		log.Error().Msgf("ReadWithCache: %v", err)

@@ -14,11 +14,14 @@
 package filter
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
+	"github.com/ToMGitHubN/gcs-basicAuth-cloudRun/common"
 	"github.com/rs/zerolog/log"
 )
 
@@ -39,7 +42,8 @@ type MediaFilterHandle struct {
 }
 
 // Performs a copy of input to response, with filters applied to the input.
-func PipelineCopy(ctx context.Context, response http.ResponseWriter, input io.Reader, request *http.Request, pipeline Pipeline) (int64, error) {
+// func PipelineCopy(ctx context.Context, response http.ResponseWriter, input io.Reader, request *http.Request, pipeline Pipeline) (int64, error) {
+func PipelineCopy(ctx context.Context, response http.ResponseWriter, input io.Reader, request *http.Request, pipeline Pipeline) error {
 	inputReader, inputWriter := io.Pipe()
 	// prime the pump by writing the input to the first pipe
 	go func() {
@@ -68,7 +72,13 @@ func PipelineCopy(ctx context.Context, response http.ResponseWriter, input io.Re
 		// update last filter pipereader for next filter or output
 		lastFilterReader = filterReader
 	}
-	return io.Copy(response, lastFilterReader)
+	// return io.Copy(response, lastFilterReader)
+
+	objectName := common.NormalizePath(request.URL.Path)
+	output_byte, err := io.ReadAll(lastFilterReader)
+	http.ServeContent(response, request, objectName, time.Now(), bytes.NewReader(output_byte))
+
+	return err
 }
 
 // NoOp does nothing to the media.

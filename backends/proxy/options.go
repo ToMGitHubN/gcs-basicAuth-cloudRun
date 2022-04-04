@@ -35,7 +35,8 @@ func SendOptions(ctx context.Context, response http.ResponseWriter,
 	err := error(nil)
 	if len(pipeline) > 0 {
 		// use a filter pipeline
-		_, err = filter.PipelineCopy(ctx, response, media, request, pipeline)
+		// _, err = filter.PipelineCopy(ctx, response, media, request, pipeline)
+		err = filter.PipelineCopy(ctx, response, media, request, pipeline)
 	} else {
 		// unfiltered, simple copy
 		_, err = io.Copy(response, media)
