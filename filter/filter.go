@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     https://www.apache.org/licenses/LICENSE-2.0
+//	https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -76,6 +76,10 @@ func PipelineCopy(ctx context.Context, response http.ResponseWriter, input io.Re
 
 	objectName := common.NormalizePath(request.URL.Path)
 	output_byte, err := io.ReadAll(lastFilterReader)
+
+	// ファイルがgzip圧縮されていた場合取り出し時にサイズが変化するため、実データのサイズをContent-Lengthで使用
+	response.Header().Set("Content-Length", fmt.Sprint(len(output_byte)))
+
 	http.ServeContent(response, request, objectName, time.Now(), bytes.NewReader(output_byte))
 
 	return err
