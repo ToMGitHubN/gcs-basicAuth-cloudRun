@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     https://www.apache.org/licenses/LICENSE-2.0
+//	https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,8 @@ package gcs
 
 import (
 	"context"
-	"fmt"
 	"net/http"
+
 	// "strconv"
 	// "strings"
 	"time"
@@ -46,7 +46,7 @@ func setHeaders(ctx context.Context, objectHandle *storage.ObjectHandle,
 	if objectAttrs.CacheControl != "" {
 		response.Header().Set("Cache-Control", objectAttrs.CacheControl)
 	}
-	if objectAttrs.ContentEncoding != "" {
+	if objectAttrs.ContentEncoding != "" && objectAttrs.ContentEncoding != "gzip" {
 		response.Header().Set("Content-Encoding", objectAttrs.ContentEncoding)
 	}
 	if objectAttrs.ContentLanguage != "" {
@@ -55,7 +55,8 @@ func setHeaders(ctx context.Context, objectHandle *storage.ObjectHandle,
 	if objectAttrs.ContentType != "" {
 		response.Header().Set("Content-Type", objectAttrs.ContentType)
 	}
-	response.Header().Set("Content-Length", fmt.Sprint(objectAttrs.Size))
+	// ファイルがgzip圧縮されていた場合、格納サイズと実際に取得したサイズが異なるため格納サイズは使用しない
+	// response.Header().Set("Content-Length", fmt.Sprint(objectAttrs.Size))
 	return
 }
 

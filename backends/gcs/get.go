@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     https://www.apache.org/licenses/LICENSE-2.0
+//	https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,7 +82,7 @@ func ReadWithCache(ctx context.Context, response http.ResponseWriter,
 		response.Header().Set("Content-Length", fmt.Sprint(len(maybeMedia)))
 		pipeline = hitPipeline
 	} else {
-		log.Debug().Msgf("gcs ReadWithCache: MISS")
+		// log.Debug().Msgf("gcs ReadWithCache: MISS")
 		// get object content and send it
 		// TODO(domz): need an aggressive reader
 		objectContent, err := objectHandle.NewReader(ctx)
@@ -105,6 +105,10 @@ func ReadWithCache(ctx context.Context, response http.ResponseWriter,
 
 		var output_byte []byte
 		output_byte, err = io.ReadAll(media)
+
+		// ファイルがgzip圧縮されていた場合取り出し時にサイズが変化するため、実データのサイズをContent-Lengthで使用
+		response.Header().Set("Content-Length", fmt.Sprint(len(output_byte)))
+
 		http.ServeContent(response, request, objectName, time.Now(), bytes.NewReader(output_byte))
 	}
 	if err != nil {
